@@ -1,4 +1,4 @@
-#from django.db import models
+from django.db import models
 #from django.contrib.auth.models import User
 
 # Create your models here.
@@ -10,7 +10,6 @@
 #    nickname = models.CharField(max_length=55)
 #    description = models.TextField(null=True, blank=True)
 
-from django.db import models
 
 class Post(models.Model):
     STATUS_CHOICES = (('Published', 'Published'),
@@ -18,7 +17,7 @@ class Post(models.Model):
 
     name = models.CharField('Заголовок', max_length=80, null=True, blank=True)
     description = models.TextField('Описание', null=True)
-    fhoto = models.ImageField('Фотография', upload_to='photo_post/', null=True, blank=True)
+    photo = models.ImageField('Фотография', upload_to='photo_post/', null=True, blank=True)
     status = models.CharField('Статус публикации', max_length=200, choices=STATUS_CHOICES)
 
 
