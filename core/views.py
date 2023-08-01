@@ -1,6 +1,13 @@
 from django.shortcuts import render, HttpResponse
 
-# Create your views here.
-def homepage(request):
+
+def Homepage(request):
     return HttpResponse("HelloWorld")
+
+
+def Contacts(request):
+    return HttpResponse("Наши контакты!")
+
+def About_Us(request):
+    return HttpResponse("Информация о нас!")
 
