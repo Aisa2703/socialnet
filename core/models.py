@@ -27,7 +27,7 @@ class Post(models.Model):
         verbose_name_plural = 'Посты'
 
     def __str__(self):
-        return f'{self.name} - {self.rating}'
+        return f'{self.name} - {self.status}'
 
 class Category(models.Model):
     RATING_CHOICES = (
