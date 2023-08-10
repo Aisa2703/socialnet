@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load django_bootstrap5 %}
+
+
+{% block content %}
+
+<h2>Post</h2>
+{% if post.creator %}
+    <div>
+        Author:
+        <a href="{% url 'user-posts' post.creator.id %}">
+            {{ post.creator.username }}
+        </a>
+    </div>
+{% endif %}
+<div>
+    Title: {{ post.name }}
+</div>
+    {% if post.photo %}
+        <img src="{{ post.photo.url }}" height="200px">
+    {% endif %}
+<div>
+    Description: {{ post.description }}
+</div>
+<div>
+    Likes qty: {{ post.likes }}
+</div>
+<h3>Add a comment</h3>
+<form method="POST">
+    {% csrf_token %}
+    {% bootstrap_form comment_form %}
+    <button class="btn btn-info">Add</button>
+</form>
+<h4>Comments</h4>
+{% for comment in comments %}
+    <div>
+        <b>{{ comment.created_by }}</b> {{ comment.comment_text }}
+    </div>
+{% endfor %}
+
+{% endblock %}

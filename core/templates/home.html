@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="alert alert-success">
+        Hello world
+    </div>
+    <h1>World</h1>
+    <div class="hulk">
+        This is homepage
+    </div>
+    <div>
+        Welcome
+    </div>
+    {{ name }}
+    <a href="" class="hulk">Green)</a><br>
+
+<h2>Profiles</h2>
+<ul>
+{% for profile in profiles %}
+    <li>
+        <a href="/profile/{{ request.user.profile.id }}">
+            Profole {{ request.user.id }}. {{ request.user.name }}
+        </a>
+    </li>
+{% endfor %}
+</ul>
+
+<h2>Posts</h2>
+<ul>
+{% for post in posts %}
+    <li>
+        <a href="/posts/{{ post.id }}">
+            {{ post.id }}. {{ post.name }}
+        </a>
+    </li>
+{% endfor %}
+</ul>
+
+<h2>Categories</h2>
+<ul>
+{% for category in categories %}
+    <li>
+        <a href="/categories/{{ category.id }}">
+            {{ category.id }}. {{ category.name }}
+        </a>
+    </li>
+{% endfor %}
+</ul>
+
+<h2>Shorts</h2>
+<ul>
+{% for short in shorts %}
+    <li>
+        <a href="short/{{ short.id }}">
+            {{ short.id }}. {{ short.name }}
+        </a>
+    </li>
+{% endfor %}
+</ul>
+
+{% endblock %}
