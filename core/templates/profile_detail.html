@@ -1,15 +1,48 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-</head>
-<body>
-    <h2>Profile {{ profile.user.username }}</h2>
-    <div>Nickname: {{ profile.nickname }}</div>
-    <div>Description: {{ profile.description }}</div>
-</body>
-</html>
+{% extends 'base.html' %}
+{% load django_bootstrap5 %}
+{% block content %}
+
+<h2><b> Profile </b> {{ profile.user.username }}</h2>
+
+<div><b> Nickname </b> {{ profile.nickname }}</div>
+
+<div>{{ profile.description }}</div>
+
+<div> <h1 class="container p-2 my-5 bg-dark text-white">USER Subscribers: {{ user.name }}</h1></div>
+<div>Subscribers count: {{ profile.subscriber.count }}</div>
+<div>Subscribers:</div>
+<div>
+    {% for user in profile.subscribers.all %}
+        <div>{{ user.username }}</div>
+    {% endfor %}
+</div>
+
+<p> {% if request.user in profile.subscriber.all %}
+    <form action="/remove-follower/{{ profile.id }}" method="POST">
+        {% csrf_token %}
+        <button class="btn btn-danger">Cancel subscribe</button>
+    </form>
+    {% else %}
+    <form action="/add-subscriber/{{ profile.id }}/" method="POST">
+        {% csrf_token %}
+        <button class="btn btn-danger">Subscribe</button>
+    </form>
+    {% endif %}
+</p>
+
+<div> <h1 class="container p-2 my-5 bg-dark text-white">User posts: {{ user.username }}</h1></div>
+<div class="row container">
+    {% for post in profile.user.posts.all %}
+        <div class="post col-sm-4">
+            <a href="/post/{{ post.id }}">
+                {{ post.name }}
+            </a>
+            {% if post.photo %}
+                <div>
+                    <img src="{{ post.photo.url}}" height="100px">
+                </div>
+            {% endif %}
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

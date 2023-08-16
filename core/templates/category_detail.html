@@ -1,10 +1,10 @@
-<h2>Categories</h2>
+{% extends 'base.html' %}
+{% load django_bootstrap5 %}
+{% block content %}
 
-<div>
-    Title: {{ category.name }}
-</div>
-<div>
-    Rating: {{ category.rating }}
-</div>
+<div>Title: {{ category.name }}</div>
 
+<div>Rating: {{ category.rating }}</div>
+
+{% endblock %}
 

@@ -1,19 +1,9 @@
-h1 {
-    color: red;
-    background-color: #00009c;
-}
-
-.hulk {
-    color: green;
-    front-size: 36px;
-}
-
 .post {
     height: 200px;
 }
 
 .post img {
-    height: 150px;
+    height: 100px;
 }
 
 .post:hover {
@@ -22,4 +12,9 @@ h1 {
 
 .my-focus:hover {
     font-size: 18px;
+}
+
+.custom-circle {
+    border: 1px solid red;
+    border-radius: 50%;
 }

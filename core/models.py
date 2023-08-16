@@ -9,6 +9,11 @@ class Profile(models.Model):
     )
     nickname = models.CharField(max_length=55)
     description = models.TextField(null=True, blank=True)
+    subscribers = models.ManyToManyField(
+        to=User,
+        related_name='followed_profile',
+        blank=True
+    )
 
 
 class Post(models.Model):
@@ -19,15 +24,15 @@ class Post(models.Model):
 
     name = models.CharField('Title', max_length=80)
     description = models.TextField('Description', null=True)
-    photo = models.ImageField('Image', upload_to='photo_post/', null=True, blank=True)
+    photo = models.ImageField('Image', upload_to='photo_post/', null=True, blank=False)
     status = models.CharField('Post status', max_length=200, choices=STATUS_CHOICES, default="Published")
     likes = models.IntegerField('Like', default=0)
     # M2O
     creator = models.ForeignKey(
         to=User,
         on_delete=models.SET_NULL,
-        null=True,  # необязательно в БД
-        blank=False,  # обязательно в Django
+        null=True,  # not necessary в БД
+        blank=False,  # required in Django
         verbose_name="Post author",
         related_name="posts"  # default == post_set
     )
@@ -79,6 +84,11 @@ class Comment(models.Model):
     comment_text = models.TextField()
     likes_qty = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
+    created_by = models.ForeignKey(
+        to=User,
+        on_delete=models.CASCADE,
+        null=True, blank=False
+    )
 
     class Meta:
         verbose_name = 'Comment'
@@ -92,13 +102,10 @@ class Comment(models.Model):
 class Short(models.Model):
     user = models.ForeignKey(
         to=User,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=False,
-        verbose_name='Posted by',
-        related_name='short'
+        on_delete=models.CASCADE,
+        verbose_name='Posted by'
     )
-    short_file = models.FileField('Short', upload_to='short_file_post/')
+    short_file = models.FileField('Short', null=True, blank=False, upload_to='short_file_post/')
     views_qty = models.PositiveIntegerField('Views', default=0)
     created_at = models.DateTimeField('Upload data', auto_now_add=True)
 
@@ -111,15 +118,26 @@ class Short(models.Model):
 
 
 class SavedPost(models.Model):
-    user = models.OneToOneField(verbose_name='User', to=User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     post = models.ManyToManyField(Post, verbose_name='saved post', related_name='saved_post')
 
     class Meta:
-        verbose_name = 'saved post'
-        verbose_name_plural = 'saved posts'
+        verbose_name = 'Saved post'
+        verbose_name_plural = 'Saved posts'
 
     def __str__(self):
-        return f'{self.user}'
+        return f'{self.user} - {self.post}'
+
+
+class Notification(models.Model):
+    user = models.ForeignKey(to=User, on_delete=models.PROTECT)
+    text = models.CharField(max_length=255)
+    is_showed = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.text
+
+
 
 
 

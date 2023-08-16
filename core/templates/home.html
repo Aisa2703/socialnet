@@ -1,61 +1,65 @@
 {% extends 'base.html' %}
-
+{% load django_bootstrap5 %}
 {% block content %}
-    <div class="alert alert-success">
-        Hello world
-    </div>
-    <h1>World</h1>
-    <div class="hulk">
-        This is homepage
+        <div class="row"></div>
+        {% for short in shorts %}
+            <div class="col"></div>
+             <div class="alert alert-secondary">
+                  <h2 class="container p-1 my-2 bg-dark text-white"> SHORT {{ short.id }} </h2>
+             </div>
+             <div>
+                <a href="{% url 'shorts-info' short.id %}">
+                    <video
+                            class="custom-circle"
+                            width="100px"
+                            src="{{ short.short_file.url }}">
+                    </video>
+                    Short #{{ short.id }}
+                </a>
+            </div>
+        {% endfor %}
+    <hr>
+
+    <h1 class="alert alert-dark">
+        <strong>Welcome to the WorldXG!</strong></h1>
+    <div>
+        <h1><span class="badge bg-secondary"> Start page </span></h1>
     </div>
     <div>
-        Welcome
+        <a href="/registration/"><button type="submit" class="btn btn-secondary">Sign up</button></a>
     </div>
-    {{ name }}
-    <a href="" class="hulk">Green)</a><br>
-
-<h2>Profiles</h2>
-<ul>
-{% for profile in profiles %}
-    <li>
-        <a href="/profile/{{ request.user.profile.id }}">
-            Profole {{ request.user.id }}. {{ request.user.name }}
+    <h3>Hello, {{ name }}</h3>
+    <div>
+        <a href="/profile/{{request.user.profile.id}}">
+            PROFILE {{ request.user.username}}
         </a>
-    </li>
-{% endfor %}
-</ul>
+    </div>
+    <div> {{ request.user }} </div>
+    <h4>Posts</h4>
+    <div>
+    {% for post in posts %}
+        <div>
+            <a href="{% url 'user-posts' post.creator.id %}">
+                {{ post.creator.username }}
+            </a>
+        </div>
+        <div>
+            {% if post.photo %}
+                <a href="{% url 'post-detail' post.id %}">
+                    <img src="{{ post.photo.url }}" height="100px">
+                </a>
+            {% endif %}
+        </div>
+    {% endfor %}
+    </div>
+    <h2> Categories </h2>
+        <div>
+            <a href="/category_info/">Category</a>
+        </div>
+    <h4> Shorts </h4>
+        <div>
+            <a href="{% url 'shorts-list' %}">Shorts</a>
+        </div>
 
-<h2>Posts</h2>
-<ul>
-{% for post in posts %}
-    <li>
-        <a href="/posts/{{ post.id }}">
-            {{ post.id }}. {{ post.name }}
-        </a>
-    </li>
-{% endfor %}
-</ul>
-
-<h2>Categories</h2>
-<ul>
-{% for category in categories %}
-    <li>
-        <a href="/categories/{{ category.id }}">
-            {{ category.id }}. {{ category.name }}
-        </a>
-    </li>
-{% endfor %}
-</ul>
-
-<h2>Shorts</h2>
-<ul>
-{% for short in shorts %}
-    <li>
-        <a href="short/{{ short.id }}">
-            {{ short.id }}. {{ short.name }}
-        </a>
-    </li>
-{% endfor %}
-</ul>
 
 {% endblock %}

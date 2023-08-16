@@ -1,67 +1,95 @@
 <!DOCTYPE html>
-{% load static %}
-{% load django_bootstrap5 %}
 <html lang="en">
+
 <head>
+    {% load static %}
+    {% load django_bootstrap5 %}
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SocialNet</title>
+    <title>WorldXG</title>
+</head>
 
+<head>
     {% bootstrap_css %}
     {% bootstrap_javascript %}
-
-    <link
-        rel="stylesheet"
-        href="{% static 'main.css' %}"
-    >
+    <link rel="stylesheet" href="{{ 'static main.css' }}">
 </head>
+
 <body>
-    <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
-        <div class="container-fluid">
-          <a class="navbar-brand" href="/">
-            <img src="{% static 'logo.png' %}" height="40px">
-          </a>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mynavbar">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="mynavbar">
-            <ul class="navbar-nav me-auto">
-              <li class="nav-item">
-                <a class="nav-link" href="/">Main page</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="{% url 'shorts-list' %}">Shorts</a>
-              </li>
-              {% if request.user.is_authenticated %}
-                <li class="nav-item">
-                  <a class="nav-link" href="{% url 'saved-posts' %}">SavedPosts</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="{% url 'add-post' %}">Add post</a>
-                </li>
-              {% endif %}
-            </ul>
-            <form class="d-flex">
-              <input class="form-control me-2" type="text" placeholder="Search">
-              <button class="btn btn-danger" type="button">Search</button>
-            </form>
-          </div>
-        </div>
-    </nav>
     <div class="row">
-        <div class="col-2">
-            <div class="my-focus">Main page</div>
-            <div class="my-focus">Search</div>
+        <div class="col-3">
+            <a class="navbar-brand" href="/">
+              <img src="{% static 'logo.png' %}" height="40px">
+              Social NET
+            </a>
+            <div>
+              {% if request.user.is_authenticated %}
+                Hello, {{ request.user.username }}
+              {% else %}
+                Please, login
+              {% endif %}
+            </div>
+            <div class="my-focus">
+              <a href="/">
+                Main
+              </a>
+            </div>
+            <div class="my-focus">
+              <a href="{% url 'search' %}">
+                Search query
+              </a>
+            </div>
             <div class="my-focus">Interesting</div>
+            <div class="my-focus">
+              <a href="{% url 'shorts-list' %}">
+                Shorts
+              </a>
+            </div>
+          {% if request.user.is_authenticated %}
+            <div class="my-focus">Messages</div>
+            <div class="my-focus">
+                <a href="{% url 'notification' %}">
+                    Notifications
+                </a>
+            </div>
+            <div class="my-focus">
+              <a href="{% url 'add-post' %}">
+                Add post
+              </a>
+            </div>
+            <div class="my-focus">
+              <a href="{% url 'add-short' %}">
+                Add short
+              </a>
+            </div>
+          {% else %}
+            <div class="my-focus">
+              <a href="{% url 'registration' %}">Registration</a>
+            </div>
+            <div class="my-focus">
+              <a href="{% url 'sign-in' %}">Login</a>
+            </div>
+          {% endif %}
         </div>
         <div class="col-10">
-            {% block content %}
+          {% if messages %}
+          <div class="col-9">
+            <div class="messages">
+                {% for message in messages %}
+                  <div
+                    {% if message.tags %}
+                     class="alert alert-{{ message.tags }}"
+                    {% endif %}>
+                      {{ message }}
+                  </div>
+                {% endfor %}
+            </div>
+          {% endif %}
+          {% block content %}
 
-            {% endblock %}
+          {% endblock %}
         </div>
     </div>
-
-
 </body>
 </html>

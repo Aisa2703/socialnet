@@ -1,7 +1,5 @@
 {% extends 'base.html' %}
 {% load django_bootstrap5 %}
-
-
 {% block content %}
 
 <h2>Short</h2>
@@ -20,16 +18,16 @@
         <img src="{{ short.short_file.url }}">
     {% endif %}
 <div>
-    Short_file: {{ short.short_file }}
+    Video: {{ short.short_file }}
 </div>
 <div>
-     Views_qty: {{ short.views_qty }}
+     Views: {{ short.views_qty }}
 </div>
 <div>
-    Created_at: {{ short.created_at }}
+    Created at: {{ short.created_at }}
 </div>
 <div>
-    <video width="500" controls src="{{ short.short_file.url }}">
+    <video width="500px" controls src="{{ short.short_file.url }}">
     </video>
 </div>
 

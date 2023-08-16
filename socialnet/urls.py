@@ -15,7 +15,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from core.views import *
 from django.conf import settings  # !
 from django.conf.urls.static import static
@@ -23,16 +23,27 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', Homepage),
-    path('profile/<int:id>', profile_detail, name='profile'),
-    path('posts/<int:id>', post_detail),
-    path('categories/<int:id>', category_detail),
-    # path('category/', category_list),
-    path('shorts/', shorts, name='shorts-list'),
-    path('short/<int:id>', short_info, name='shorts-info'),
+    path('contacts/', contacts),
+    path('about_us/', about_us),
+    path('profile/<int:id>/', profile_detail, name='profile'),
+    path('posts/<int:id>/', post_detail, name='post-detail'),
+    path('category_info/', category_list),
+    path('category_object/<int:id>', category_detail),
+    path('short_file/<int:id>/', short_file, name='short-info'),
+    path('short_lst/', short_list, name='shorts-list'),
     path('saved_posts/', saved_posts_list, name='saved-posts'),
     path('<int:user_id>/', user_posts, name='user-posts'),
+    path('posts/', post_list, name='posts'),
     path('add-post/', create_post, name='add-post'),
-
+    path('add-short/', create_short, name='add-short'),
+    path('add-saved/', add_saved, name='add-saved'),
+    path('remove-saved/', remove_saved, name='remove-saved'),
+    path('registration/', register, name='register'),
+    path('users/', include('userapp.urls')),
+    path('search/', search, name='search'),
+    path('search-result/', search_result, name='search-result'),
+    path('add-subscriber/<int:profile_id>/', add_subscriber, name='add-subscriber'),
+    path('notification/', notifications, name='notification'),
 ]
 
 

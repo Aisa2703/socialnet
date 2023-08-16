@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load django_bootstrap5 %}
+{% block content %}
+
+<div> <h1 class="container p-2 my-5 bg-dark text-white">Short </h1> </div>
+
+
+<div class="alert alert-secondary">
+
+
+    <div> <h2>Created at: {{ short.created_at }}</h2></div>
+
+    <div> <h2>Name: {{ short.short_file}}</h2> </div>
+
+    <div><h2> Uploaded by: {{ short.user}}</h2></div>
+
+    <div> <h2>Views: {{ short.views_qty }}</h2></div>
+
+</div>
+
+<br>
+    <video width="900" height="600" controls src="{{ short.short_file.url }}">
+      Your browser does not support the video tag.
+    </video>
+
+
+
+{% endblock %}

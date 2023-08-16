@@ -1,10 +1,8 @@
 {% extends 'base.html' %}
 {% load django_bootstrap5 %}
-
-
 {% block content %}
 
-<h2>Post</h2>
+<div> <h2 class="container p-2 my-5 bg-dark text-white">Post</h2></div>
 {% if post.creator %}
     <div>
         Author:
@@ -17,7 +15,7 @@
     Title: {{ post.name }}
 </div>
     {% if post.photo %}
-        <img src="{{ post.photo.url }}" height="200px">
+        <img src="{{ post.photo.url }}" height="100px">
     {% endif %}
 <div>
     Description: {{ post.description }}
@@ -25,17 +23,38 @@
 <div>
     Likes qty: {{ post.likes }}
 </div>
+<div>
+    {% if post in request.user.savedpost.post.all %}
+    <form action="/remove-saved/" method="POST">
+        {% csrf_token %}
+        <input type="number" name="post_id" value="{{ post.id }}" hidden>
+        <button class="btn btn-danger"> Remove favorites</button>
+    </form>
+    {% else %}
+    <form action="/add-saved/" method="POST">
+        {% csrf_token %}
+        <input type="number" name="post_id" value="{{ post.id }}" hidden>
+        <button class="btn btn-dark">Save favorites</button>
+    </form>
+    {% endif %}
+</div>
+
+<br>
 <h3>Add a comment</h3>
 <form method="POST">
     {% csrf_token %}
     {% bootstrap_form comment_form %}
-    <button class="btn btn-info">Add</button>
+    <button class="btn btn-dark">Add</button>
 </form>
-<h4>Comments</h4>
+<br>
+
+<br>
+<h3 class="container p-2 my-5 bg-dark text-white">Comments</h3>
 {% for comment in comments %}
     <div>
         <b>{{ comment.created_by }}</b> {{ comment.comment_text }}
     </div>
 {% endfor %}
+<br>
 
 {% endblock %}

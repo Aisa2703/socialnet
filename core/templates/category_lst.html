@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% load django_bootstrap5 %}
+{% block content %}
+
+
+<div><h2 class="container p-2 my-5 bg-dark text-white"> Categories</h2></div>
+
+<div> Category {{ category_lst.name }} </div>
+
+<div> Rating {{ category_lst.rating }}</div>
+
+
+{% endblock %}
