@@ -26,6 +26,7 @@ urlpatterns = [
     path('contacts/', contacts),
     path('about_us/', about_us),
     path('profile/<int:id>/', profile_detail, name='profile'),
+    path('add-profile/', add_profile, name='add-profile'),
     path('posts/<int:id>/', post_detail, name='post-detail'),
     path('category_info/', category_list),
     path('category_object/<int:id>', category_detail),
@@ -35,6 +36,7 @@ urlpatterns = [
     path('<int:user_id>/', user_posts, name='user-posts'),
     path('posts/', post_list, name='posts'),
     path('add-post/', create_post, name='add-post'),
+    path('add-posts/', create_post, name='add-posts'),
     path('add-short/', create_short, name='add-short'),
     path('add-saved/', add_saved, name='add-saved'),
     path('remove-saved/', remove_saved, name='remove-saved'),
@@ -43,6 +45,7 @@ urlpatterns = [
     path('search/', search, name='search'),
     path('search-result/', search_result, name='search-result'),
     path('add-subscriber/<int:profile_id>/', add_subscriber, name='add-subscriber'),
+    path('remove-follower/<int:profile_id>/', remove_follower, name='remove-follower'),
     path('notification/', notifications, name='notification'),
 ]
 

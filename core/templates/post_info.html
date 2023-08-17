@@ -24,6 +24,17 @@
     Likes qty: {{ post.likes }}
 </div>
 <div>
+    <form method="POST">
+        {% csrf_token %}
+        <button name="like">Like</button>
+    </form>
+    <form method="POST">
+        {% csrf_token %}
+        <button name="dislike">Dislike</button>
+    </form>
+</div>
+
+<div>
     {% if post in request.user.savedpost.post.all %}
     <form action="/remove-saved/" method="POST">
         {% csrf_token %}

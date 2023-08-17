@@ -1,19 +1,19 @@
 <!DOCTYPE html>
+{% load static %}
+{% load django_bootstrap5 %}
 <html lang="en">
 
 <head>
-    {% load static %}
-    {% load django_bootstrap5 %}
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WorldXG</title>
-</head>
-
-<head>
     {% bootstrap_css %}
     {% bootstrap_javascript %}
-    <link rel="stylesheet" href="{{ 'static main.css' }}">
+    <link
+        rel="stylesheet"
+        href="{% static 'main.css' %}"
+    >
 </head>
 
 <body>
@@ -21,7 +21,7 @@
         <div class="col-3">
             <a class="navbar-brand" href="/">
               <img src="{% static 'logo.png' %}" height="40px">
-              Social NET
+              SocialNETxg
             </a>
             <div>
               {% if request.user.is_authenticated %}
@@ -40,18 +40,28 @@
                 Search query
               </a>
             </div>
-            <div class="my-focus">Interesting</div>
+            <div class="my-focus">
+                Interesting
+            </div>
             <div class="my-focus">
               <a href="{% url 'shorts-list' %}">
                 Shorts
               </a>
             </div>
           {% if request.user.is_authenticated %}
-            <div class="my-focus">Messages</div>
+            <div class="my-focus">
+                Messages
+            </div>
             <div class="my-focus">
                 <a href="{% url 'notification' %}">
-                    Notifications
+                    Notifications -
+                    {{ request.user.notification_set.count }}
                 </a>
+            </div>
+            <div class="my-focus">
+              <a href="{% url 'add-posts' %}">
+                Add post
+              </a>
             </div>
             <div class="my-focus">
               <a href="{% url 'add-post' %}">
@@ -63,6 +73,22 @@
                 Add short
               </a>
             </div>
+            {% if request.user.profile %}
+              <div class="my-focus">
+                <a href="{% url 'profile' request.user.profile.id %}">
+                  Profile
+                </a>
+              </div>
+            {% else %}
+              <div class="my-focus">
+                <a href="{% url 'add-profile' %}">
+                  Add profile
+                </a>
+              </div>
+            {% endif %}
+            <div class="my-focus">
+              <a href="{% url 'sign-out' %}">Logout</a>
+            </div>
           {% else %}
             <div class="my-focus">
               <a href="{% url 'registration' %}">Registration</a>
@@ -72,22 +98,21 @@
             </div>
           {% endif %}
         </div>
-        <div class="col-10">
+        <div class="col-9">
           {% if messages %}
-          <div class="col-9">
             <div class="messages">
                 {% for message in messages %}
                   <div
                     {% if message.tags %}
-                     class="alert alert-{{ message.tags }}"
-                    {% endif %}>
-                      {{ message }}
+                      class="alert alert-{{ message.tags }}"
+                    {% endif %}
+                  >
+                    {{ message }}
                   </div>
                 {% endfor %}
             </div>
           {% endif %}
           {% block content %}
-
           {% endblock %}
         </div>
     </div>

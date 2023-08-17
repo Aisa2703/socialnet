@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.contrib import messages
 from .models import *
-from .forms import CommentForm, RegistrationUserForm
+from .forms import CommentForm, RegistrationUserForm, ProfileForm, PostsForm
 
 
 def Homepage(request):
@@ -35,13 +35,49 @@ def post_detail(request, id):
     if request.method == "GET":
         return render(request, "post_info.html", context)
     elif request.method == "POST":
-        comment_form = CommentForm(request.POST)
-        if comment_form.is_valid():
-            new_comment = comment_form.save(commit=False)
-            new_comment.created_by = request.user
-            new_comment.post = post_object
-            new_comment.save()
-            return HttpResponse("done")
+        if 'like' in request.POST:
+            post_object.likes += 1
+            post_object.save()
+            Notification.objects.create(
+                user=post_object.creator,
+                text=f"{request.user.username} liked your post with id {post_object.id}"
+            )
+            return redirect(post_detail, id=id)
+        elif 'dislike' in request.POST:
+            post_object.likes -= 1
+            post_object.save()
+            return redirect(post_detail, id=id)
+
+        else:
+            comment_form = CommentForm(request.POST)
+            if comment_form.is_valid():
+                new_comment = comment_form.save(commit=False)
+                new_comment.created_by = request.user
+                new_comment.post = post_object
+                new_comment.save()
+
+                Notification.objects.create(
+                    user=post_object.creator,
+                    text=f"{request.user.username} added comment"
+                )
+                return HttpResponse("done")
+
+
+def add_posts(request):
+    posts_form = PostsForm()
+    context = {'posts_form': posts_form}
+
+    if request.method == "POST":
+        posts_form = PostsForm(request.POST, request.FILES)
+        if posts_form.is_valid():
+            posts_object = posts_form.save(commit=False)
+            posts_object.user = request.user
+            posts_object.save()
+            return redirect(post_detail, id=posts_object.id)
+        else:
+            return HttpResponse("Not valid")
+
+    return render(request, 'add_posts.html', context)
 
 
 def profile_detail(request, id):
@@ -51,6 +87,23 @@ def profile_detail(request, id):
     user_posts = Post.objects.filter(creator=profile_object.user)
     context['user_posts'] = user_posts
     return render(request, "profile_detail.html", context)
+
+
+def add_profile(request):
+    profile_form = ProfileForm()
+    context = {'profile_form': profile_form}
+
+    if request.method == "POST":
+        profile_form = ProfileForm(request.POST, request.FILES)
+        if profile_form.is_valid():
+            profile_object = profile_form.save(commit=False)
+            profile_object.user = request.user
+            profile_object.save()
+            return redirect(profile_detail, id=profile_object.id)
+        else:
+            return HttpResponse("Not valid")
+
+    return render(request, 'add_profile.html', context)
 
 
 def category_detail(request, id):
@@ -75,7 +128,11 @@ def shorts(request):
 
 
 def short_info(request, id):
-    context = {"short": Short.objects.get(id=id)}
+    short = Short.objects.get(id=id)
+    short.views_qty += 1
+    short.viewed_users.add(request.user)
+    short.save()
+    context = {"short": short}
     return render(request, "short_info.html", context)
 
 
@@ -197,6 +254,14 @@ def add_subscriber(request, profile_id):
         text=f"User {request.user.username} subscribed to you!"
     )
     new_notification.save()
+    return redirect(f'/profile/{profile.id}/')
+
+
+def remove_follower(request, profile_id):
+    profile = Profile.objects.get(id=profile_id)
+    profile.subscribers.remove(request.user)
+    profile.save()
+    messages.warning(request, "You have successfully unsubscribed!")
     return redirect(f'/profile/{profile.id}/')
 
 

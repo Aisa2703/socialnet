@@ -12,7 +12,20 @@ class Profile(models.Model):
     subscribers = models.ManyToManyField(
         to=User,
         related_name='followed_profile',
-        blank=True
+        blank=True,
+    )
+    photo = models.ImageField(
+        upload_to='profile.photo/',
+        null=True
+    )
+    link_fb = models.CharField(
+        max_length=255, null=True, blank=True
+    )
+    whatsapp = models.CharField(
+        max_length=30, null=True, blank=True
+    )
+    telegram = models.CharField(
+        max_length=55, null=True, blank=True
     )
 
 
@@ -108,6 +121,11 @@ class Short(models.Model):
     short_file = models.FileField('Short', null=True, blank=False, upload_to='short_file_post/')
     views_qty = models.PositiveIntegerField('Views', default=0)
     created_at = models.DateTimeField('Upload data', auto_now_add=True)
+    viewed_users = models.ManyToManyField(
+        to=User,
+        blank=True,
+        related_name='viewed_shorts',
+    )
 
     class Meta:
         verbose_name = 'Short'
