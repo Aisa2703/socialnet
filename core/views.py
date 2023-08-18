@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.contrib import messages
 from .models import *
-from .forms import CommentForm, RegistrationUserForm, ProfileForm, PostsForm
+from .forms import *
 
 
 def Homepage(request):
@@ -71,7 +71,7 @@ def add_posts(request):
         posts_form = PostsForm(request.POST, request.FILES)
         if posts_form.is_valid():
             posts_object = posts_form.save(commit=False)
-            posts_object.user = request.user
+            posts_object.creator = request.user
             posts_object.save()
             return redirect(post_detail, id=posts_object.id)
         else:
@@ -84,8 +84,11 @@ def profile_detail(request, id):
     context = {}
     profile_object = Profile.objects.get(id=id)
     context["profile"] = profile_object
-    user_posts = Post.objects.filter(creator=profile_object.user)
-    context['user_posts'] = user_posts
+
+    if request.method == "POST":
+        Profile.subscribers.add(request.user)
+        Profile.save()
+
     return render(request, "profile_detail.html", context)
 
 
@@ -150,6 +153,18 @@ def create_short(request):
         return redirect('shorts-info', id=new_short_object.id)
 
 
+def update_short(request, id):
+    short = Short.objects.get(id=id)
+    if request.method == "POST":
+        new_description = request.POST["description"]
+        short.description = new_description
+        short.save()
+        return redirect(short_info, id=short.id)
+
+    context = {'short': short}
+    return render(request, 'update_short.html', context)
+
+
 def short_file(request, id):
     short_file_object = Short.objects.get(id=id)
     return render(request, 'short_file.html', {'short': short_file_object})
@@ -195,8 +210,8 @@ def saved_posts_list(request):
     return render(request, 'saved_posts.html', context)
 
 
-def user_posts(request, user_id):
-    user = User.objects.get(id=user_id)
+def user_posts(request, id):
+    user = User.objects.get(id=id)
     posts = Post.objects.filter(creator=user)
     context = {
         "user": user,
@@ -218,6 +233,42 @@ def create_post(request):
         new_post.creator = request.user
         new_post.save()
         return HttpResponse("done")
+
+
+def update_post(request, id):
+    context = {}
+    post_object = Post.objects.get(id=id)
+
+    if request.user != post_object.creator:
+        return HttpResponse("No access")
+
+    if request.method == "POST":
+        post_form = PostForm(
+            data=request.POST,
+            files=request.FILES,
+            instance=post_object
+        )
+        if post_form.is_valid():
+            post_form.save()
+            return redirect(post_detail, id=post_object.id)
+        else:
+            messages.warning(request, "Not valid")
+            context["post_form"] = post_form
+            return render(request, 'update_post.html', context)
+
+    post_form = PostForm(instance=post_object)
+    context["post_form"] = post_form
+    return render(request, 'update_post.html', context)
+
+
+def delete_post(request, id):
+    post = Post.objects.get(id=id)
+
+    if request.user != post.creator:
+        return HttpResponse("No access")
+
+    post.delete()
+    return redirect(Homepage)
 
 
 def search(request):

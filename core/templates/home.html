@@ -1,46 +1,31 @@
 {% extends 'base.html' %}
 {% load django_bootstrap5 %}
 {% block content %}
-        <div class="row"></div>
-        {% for short in shorts %}
-            <div class="col"></div>
-             <div class="alert alert-secondary">
-                  <h2 class="container p-1 my-2 bg-dark text-white"> SHORT {{ short.id }} </h2>
-             </div>
-             <div>
-                <a href="{% url 'short-info' short.id %}">
-                    <video
-                            class="custom-circle"
-                            width="100px"
-                            src="{{ short.short_file.url }}">
-                    </video>
-                    Short #{{ short.id }}
-                </a>
-            </div>
-        {% endfor %}
-    <hr>
 
     <h1 class="alert alert-dark">
         <strong>Welcome to the WorldXG!</strong></h1>
     <div>
-        <h1><span class="badge bg-secondary"> Start page </span></h1>
+        <h1><span class="badge bg-secondary">Main page</span></h1>
     </div>
     <div>
         <a href="/registration/"><button type="submit" class="btn btn-secondary">Sign up</button></a>
     </div>
-    <h3>Hello, {{ name }}</h3>
+
     <div>
+        <h4>Hello, {{ name }}
         <a href="/profile/{{request.user.profile.id}}">
-            PROFILE {{ request.user.username}}
+            {{ request.user.username}}
         </a>
+        </h4>
     </div>
     <div> {{ request.user }} </div>
-    <h4>Posts</h4>
-    <div>
+
+    {% include 'includes/search_form.html' %}
+    <h2>Posts</h2>
     {% for post in posts %}
         <div>
             <a href="{% url 'user-posts' post.creator.id %}">
-                {{ post.creator.username }}
+                Post {{ post.creator.username }}
             </a>
         </div>
         <div>
@@ -50,16 +35,33 @@
                 </a>
             {% endif %}
         </div>
+        <hr>
     {% endfor %}
-    </div>
+
     <h2> Categories </h2>
         <div>
-            <a href="/category_info/">Category</a>
+            <a href="{% url 'category-info' %}">Category</a>
         </div>
-    <h4> Shorts </h4>
+    <h2> Shorts </h2>
         <div>
             <a href="{% url 'shorts-list' %}">Shorts</a>
         </div>
 
-
+    <div class="row">
+        {% for short in shorts %}
+            <div class="col">
+                <a href="{% url 'short-info' short.id %}">
+                    <div>
+                        <video
+                            class="custom-circle"
+                            width="100px"
+                            src="{{ short.short_file.url }}">
+                        </video>
+                        Short #{{ short.id }}
+                    </div>
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+    <hr>
 {% endblock %}

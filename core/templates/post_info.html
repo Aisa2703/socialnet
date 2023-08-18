@@ -2,15 +2,19 @@
 {% load django_bootstrap5 %}
 {% block content %}
 
-<div> <h2 class="container p-2 my-5 bg-dark text-white">Post</h2></div>
-{% if post.creator %}
+<div>
+    <h2 class="container p-2 my-5 bg-dark text-white">
+        Post
+    </h2>
+    {% if post.creator %}
     <div>
-        Author:
+        Posted by:
         <a href="{% url 'user-posts' post.creator.id %}">
             {{ post.creator.username }}
         </a>
     </div>
-{% endif %}
+    {% endif %}
+</div>
 <div>
     Title: {{ post.name }}
 </div>
@@ -34,8 +38,8 @@
     </form>
 </div>
 
-<div>
-    {% if post in request.user.savedpost.post.all %}
+<p>
+    {% if post in request.user.savedposts.post.all %}
     <form action="/remove-saved/" method="POST">
         {% csrf_token %}
         <input type="number" name="post_id" value="{{ post.id }}" hidden>
@@ -48,24 +52,28 @@
         <button class="btn btn-dark">Save favorites</button>
     </form>
     {% endif %}
-</div>
+</p>
+{% if request.user == post.creator %}
+    <p>
+        <a class="btn btn-success" href="{% url 'update-post' post.id %}">Edit</a>
+    </p>
+    <p>
+        <a class="btn btn-danger" href="{% url 'delete-post' post.id %}">Delete</a>
+    </p>
+{% endif %}
 
-<br>
 <h3>Add a comment</h3>
 <form method="POST">
     {% csrf_token %}
     {% bootstrap_form comment_form %}
     <button class="btn btn-dark">Add</button>
 </form>
-<br>
 
-<br>
 <h3 class="container p-2 my-5 bg-dark text-white">Comments</h3>
 {% for comment in comments %}
     <div>
         <b>{{ comment.created_by }}</b> {{ comment.comment_text }}
     </div>
 {% endfor %}
-<br>
 
 {% endblock %}

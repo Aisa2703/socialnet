@@ -5,7 +5,7 @@
 <h2>Short</h2>
 {% if short.creator %}
     <div>
-        Author:
+        Posted by:
         <a href="{% url 'user-shorts' short.creator.id %}">
             {{ short.creator.username }}
         </a>
@@ -30,8 +30,13 @@
     Created at: {{ short.created_at }}
 </div>
 <div>
+    Description: {{ short.description }}
+</div>
+<div>
     <video width="500px" controls src="{{ short.short_file.url }}">
     </video>
 </div>
-
+<a href="{% url 'update-short' short.id %}" class="btn btn-info">
+    Update
+</a>
 {% endblock %}

@@ -1,17 +1,18 @@
 {% extends 'base.html' %}
-{% load django_bootstrap5 %}
 {% block content %}
-
-
 {% for post in posts %}
 
 <div class="post">
 
-  <div> <h2 class="container p-2 my-5 bg-dark text-white">Post</h2></div>
+  <div><h2 class="container p-2 my-5 bg-dark text-white">Post</h2></div>
 
-<div> Post: {{ post.name }} </div>
+        <div class="post col-sm-4">
+            <a href="/posts/{{ post.id }}">
+                {{ post.name }}
+            </a>
+        </div>
 
-<div> Author {{ post.creator }}</div>
+<div><a href="{% url 'profile' post.creator.profile.id %}">Posted by {{ post.creator }}</a></div>
 
 </div>
             {% if post.photo %}
@@ -20,11 +21,7 @@
                 </div>
             {% endif %}
 
-<div class="post">
 
-  <a href="/posts/">
-    {{ post.name }} </a>
 {% endfor %}
-  </div>
 
 {% endblock %}

@@ -1,14 +1,11 @@
 {% extends 'base.html' %}
 {% load django_bootstrap5 %}
-
 {% block content %}
-<h2> Add post.form </h2>
-<div>
+
     <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}
-        {% bootstrap_form posts_form %}
-        <button class="btn btn-info">Save</button>
+        {% bootstrap_form post_form %}
+        <button>Update</button>
     </form>
-</div>
 
 {% endblock %}
