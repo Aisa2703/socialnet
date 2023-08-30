@@ -26,8 +26,8 @@ urlpatterns = [
     path('contacts/', contacts),
     path('about_us/', about_us),
     path('profile/<int:id>/', profile_detail, name='profile'),
-    path('add-profile/', add_profile, name='add-profile'),
-    path('category-info/', category_list, name='category-info'),
+    path('add_profile/', add_profile, name='add-profile'),
+    path('category_info/', category_list, name='category-info'),
     path('category_object/<int:id>', category_detail),
     path('short_file/<int:id>/', short_file, name='short-info'),
     path('short_lst/', short_list, name='shorts-list'),
@@ -49,6 +49,9 @@ urlpatterns = [
     path('add-subscriber/<int:profile_id>/', add_subscriber, name='add-subscriber'),
     path('remove-follower/<int:profile_id>/', remove_follower, name='remove-follower'),
     path('notification/', notifications, name='notification'),
+    path('comment-edit/<int:id>/', comment_edit, name='comment-edit'),
+    path('comment-delete/<int:id>/', comment_delete, name='comment-delete'),
+
 ]
 
 

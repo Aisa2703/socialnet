@@ -53,6 +53,7 @@
     </form>
     {% endif %}
 </p>
+
 {% if request.user == post.creator %}
     <p>
         <a class="btn btn-success" href="{% url 'update-post' post.id %}">Edit</a>
@@ -72,7 +73,17 @@
 <h3 class="container p-2 my-5 bg-dark text-white">Comments</h3>
 {% for comment in comments %}
     <div>
-        <b>{{ comment.created_by }}</b> {{ comment.comment_text }}
+        <b>{{ comment.created_by }}</b>
+        {{ comment.comment_text }}
+
+        {% if request.user == comment.created_by %}
+            <a href="{% url 'comment-edit' comment.id %}">
+                Edit
+            </a>
+            <a href="{% url 'comment-delete' comment.id %}">
+                Delete
+            </a>
+        {% endif %}
     </div>
 {% endfor %}
 

@@ -94,7 +94,7 @@ def profile_detail(request, id):
 
 def add_profile(request):
     profile_form = ProfileForm()
-    context = {'profile_form': profile_form}
+    context = {"profile_form": profile_form}
 
     if request.method == "POST":
         profile_form = ProfileForm(request.POST, request.FILES)
@@ -342,3 +342,30 @@ def notifications(request):
     )
 
 
+def comment_edit(request, id):
+    comment = Comment.objects.get(id=id)
+
+    if request.user != comment.created_by:
+        messages.warning(request, "No access!")
+        return redirect(post_detail, id=comment.post.id)
+
+    if request.method == "POST":
+        form = CommentForm(instance=comment, data=request.POST)
+        if form .is_valid():
+            form.save()
+            return redirect(post_detail, id=comment.post.id)
+
+    form = CommentForm(instance=comment)
+    context = {"form": form}
+    return render(request, 'comment_edit.html', context)
+
+
+def comment_delete(request, id):
+    comment = Comment.objects.get(id=id)
+
+    if request.user != comment.created_by:
+        messages.warning(request, "No access!")
+        return redirect(post_detail, id=comment.post.id)
+
+    comment.delete()
+    return redirect(post_detail, id=comment.post.id)
